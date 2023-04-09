@@ -5,7 +5,21 @@ var row = 0; //current guess (attempt #)
 var col = 0; //current letter for that attempt
 
 var gameOver = false;
-var word = "OPTAR";
+var wordList = [
+  "OPTAR",
+  "ANDAR",
+  "LUTAR",
+  "CAGAR",
+  "CASAR",
+  "COMER",
+  "POLIR",
+  "LIXAR",
+  "JOGAR",
+  "HAVER",
+  "VALER",
+  "PEDIR",
+];
+var word = wordList[Math.floor(Math.random() * wordList.length)].toUpperCase();
 
 window.onload = function () {
   intialize();
@@ -129,13 +143,5 @@ function update() {
   let letters = document.querySelectorAll(".key");
   letters.forEach((letter) => {
     letter.classList.remove("used");
-
-    // Disable used letters
-    let usedTiles = document.querySelectorAll(".correct, .present");
-    usedTiles.forEach((tile) => {
-      if (tile.innerText == letter.innerText) {
-        letter.classList.add("used");
-      }
-    });
   });
 }

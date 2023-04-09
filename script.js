@@ -24,11 +24,59 @@ function intialize() {
     }
   }
 
+  // Create the keyboard
+  for (let c = 0; c < 26; c++) {
+    let key = document.createElement("span");
+    key.classList.add("key");
+    key.innerText = String.fromCharCode(65 + c);
+    key.addEventListener("click", (e) => {
+      if (gameOver) return;
+
+      if (col < width) {
+        let currTile = document.getElementById(
+          row.toString() + "-" + col.toString()
+        );
+        if (currTile.innerText == "") {
+          currTile.innerText = key.innerText;
+          col += 1;
+        }
+      }
+    });
+    document.getElementById("keyboard").appendChild(key);
+  }
+
+  // Create the enter key
+  let enter = document.createElement("span");
+  enter.classList.add("key");
+  enter.innerText = "Enter";
+  enter.addEventListener("click", (e) => {
+    if (gameOver) return;
+    update();
+    row += 1; //start new row
+    col = 0; //start at 0 for new row
+  });
+  document.getElementById("keyboard").appendChild(enter);
+
+  // Create the delete key
+  let del = document.createElement("span");
+  del.classList.add("key");
+  del.innerText = "Del";
+  del.addEventListener("click", (e) => {
+    if (gameOver) return;
+    if (0 < col && col <= width) {
+      col -= 1;
+    }
+    let currTile = document.getElementById(
+      row.toString() + "-" + col.toString()
+    );
+    currTile.innerText = "";
+  });
+  document.getElementById("keyboard").appendChild(del);
+
   // Listen for Key Press
   document.addEventListener("keyup", (e) => {
     if (gameOver) return;
 
-    // alert(e.code);
     if ("KeyA" <= e.code && e.code <= "KeyZ") {
       if (col < width) {
         let currTile = document.getElementById(
@@ -52,11 +100,6 @@ function intialize() {
       row += 1; //start new row
       col = 0; //start at 0 for new row
     }
-
-    if (!gameOver && row == height) {
-      gameOver = true;
-      document.getElementById("answer").innerText = word;
-    }
   });
 }
 
@@ -65,7 +108,6 @@ function update() {
   for (let c = 0; c < width; c++) {
     let currTile = document.getElementById(row.toString() + "-" + c.toString());
     let letter = currTile.innerText;
-
     //Is it in the correct position?
     if (word[c] == letter) {
       currTile.classList.add("correct");
@@ -82,4 +124,18 @@ function update() {
       gameOver = true;
     }
   }
+
+  // Update the keyboard
+  let letters = document.querySelectorAll(".key");
+  letters.forEach((letter) => {
+    letter.classList.remove("used");
+
+    // Disable used letters
+    let usedTiles = document.querySelectorAll(".correct, .present");
+    usedTiles.forEach((tile) => {
+      if (tile.innerText == letter.innerText) {
+        letter.classList.add("used");
+      }
+    });
+  });
 }
